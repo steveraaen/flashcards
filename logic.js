@@ -13,40 +13,50 @@ var full = process.argv[3];
 var cloze = process.argv[4];
 var remain = process.argv[5];
 var cardStr;
-// main function
-function eitherCard() {
-    if (func === 'basic') {
-// Build basic card
-        function BasicCard(n, f, b) {
-            this.name = name;
-            this.front = front;
-            this.back = back;
-        }
-        bCard = new BasicCard(name, front, back);
-// Save it to a file
-        function saveBCard() {
-            bCardStr = JSON.stringify(bCard);
-            fs.appendFile('basic.txt', bCardStr + '\r', function(err) {
-                if (err) throw err;
-            })
-        }
-        saveBCard()
-    }  if (func === 'cloze') {
-// Build cloze card
-        function ClozeCard(f, c, r) {
-            this.full = full;
-            this.cloze = cloze;
-            this.rmein = remain;
-        }
-        cCard = new ClozeCard(full, cloze, remain);
-// Save it to a file
-        function saveCCard() {
-            cCardStr = JSON.stringify(cCard);
-            fs.appendFile('cloze.txt', cCardStr + '\r', function(err) {
-                if (err) throw err;
-            })
-        }
-    }
-    saveCCard()
+// Choose basic or cloze
+if (func === 'b') {
+    basicCard()
 }
-eitherCard()
+else if (func === 'c'){
+    clozeCard()
+}
+// Construct scope safe basic object 
+function basicCard(){
+    function MakeBasic(n, f, b){
+        if(!(this instanceof MakeBasic)){
+            return new MakeBasic(name, front, back)
+        }
+        this.name = name;
+        this.front = front;
+        this.back = back;
+    }
+    bCard = new MakeBasic(name, front, back)
+// Save basic card to ext file
+        cardStr = JSON.stringify(bCard);
+        fs.appendFile('cards.txt', cardStr + '\r', function(err){
+            if (err) throw err;
+        })   
+}
+// Construct scope safe cloze object 
+function clozeCard(){
+    function MakeCloze(f, c, r){
+        if(!(this instanceof MakeCloze)){
+            return new MakeCloze(full, cloze, remain)
+        }
+        this.full = full;
+        this.cloze = cloze;
+        this.remain = remain;
+    }
+    cCard = new MakeCloze(full, cloze, remain)
+// Save cloze card to ext file
+        cardStr = JSON.stringify(cCard);
+        fs.appendFile('cards.txt', cardStr + '\r', function(err){
+            if (err) throw err;
+        })   
+}
+
+
+
+
+
+
