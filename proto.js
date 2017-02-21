@@ -43,6 +43,10 @@ if (func === 'b') {
     writeCard();
     // Make cloze card if argv[2] = 'c'
 } else if (func === 'c') {
+    if (cloze === null || cloze === undefined){
+        console.log('You forgot to add the cloze after the text.  Try again');
+        return;
+    }
     function MakeCloze(text) {
         if (!(this instanceof MakeCloze)) {
             return new MakeCloze(fullText)
