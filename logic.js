@@ -1,13 +1,12 @@
 var fs = require('fs');
 // 2 kinds of cards, basic and cloze
-var bCard;
-var cCard;
+var bCard = {};
+var cCard = {};
 // First command line input defines which card to build
 var func = process.argv[2];
 // Assignments for basic
-var name = process.argv[3];
-var front = process.argv[4];
-var back = process.argv[5];
+var front = process.argv[3];
+var back = process.argv[4];
 // Assignments for cloze
 var full = process.argv[3];
 var cloze = process.argv[4];
@@ -22,15 +21,15 @@ else if (func === 'c'){
 }
 // Construct scope safe basic object 
 function basicCard(){
-    function MakeBasic(n, f, b){
+    function MakeBasic(f, b){
         if(!(this instanceof MakeBasic)){
-            return new MakeBasic(name, front, back)
+            return new MakeBasic(front, back)
         }
-        this.name = name;
         this.front = front;
         this.back = back;
     }
-    bCard = new MakeBasic(name, front, back)
+MakeBasic.call(bCard, front, back)
+/*    bCard = new MakeBasic(front, back)*/
 // Save basic card to ext file
         cardStr = JSON.stringify(bCard);
         fs.appendFile('cards.txt', cardStr + '\r', function(err){
@@ -55,6 +54,8 @@ function clozeCard(){
         })   
 }
 
+var bProto = Object.getPrototypeOf(bCard);
+console.log(bProto)
 
 
 
